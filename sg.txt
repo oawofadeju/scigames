@@ -1,0 +1,90 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+//between 1900 and 2000 , list of people with birth and end years .. find year with most number of people alive
+//for somebody to be alive, they must be born and not dead
+
+//1900 .. was there anybody born before 1900? and not dead in 1900, then increment count   tallly
+//1901 .. was there anybody born before 1901? and not dead in 1901, then increment count   tally
+//1902 .. was there anybody born before 1902? and not dead in 1902, then increment count   tally
+//1903 .. was there anybody born before 1903? and not dead in 1903, then increment count    tally
+//1904 .. was there anybody born before 1904? and not dead in 1904, then increment count   tally
+//1905 .. was there anybody born before 1905? and not dead in 1905, then increment count   tally
+//1906 .. was there anybody born before 1906? and not dead in 1906, then increment count    tally
+//find max of the tallies
+
+//sort by death .. 1958, 1968, 1978, 1988
+//sort by birth .. 1901, 1902, 1905
+
+struct Person{
+    int birth;
+    int death;
+    Person(int b, int d):birth(b), death(d){}
+};
+
+vector<Person> populatePersons(vector<Person> a){
+    int j = 1990;
+    for (int i=0; i < 1000; i++){
+        Person b = Person(j, j+10);
+        a.push_back(b);
+        if (j < 1901){
+            j = 1980;
+        }
+        j--;
+    }
+    return a;
+}
+
+struct PersonSort{
+    bool operator () (const Person& a, const Person& b){
+        if(a.birth < b.birth){
+            return true;
+        }
+        return false;
+    }
+};
+
+struct PersonPartition{
+    int year;
+    PersonPartition(int y):year(y){}
+    bool operator () (const Person& a){
+        if(a.birth <= year){
+            return true;
+        }
+        return false;
+    }
+};
+
+//I chose a sorted vector because all the insertions happen at the beginning and contiguous memory .. much smaller overhead and pages closer together in memory so most likely less page faults if virtual memory.
+//int was used as a date, however, it can easily be changed to a date object by either using a user defined type or a borrowed API. Also I PHP has a DateTime class
+int main() {
+    vector<Person> a;
+    a = populatePersons(a);
+    //sort collection of data by birth and partition the element by birth on the year based on the current year totals being calculated. Once you have the partition information, iterate through the results and increment the count for that year if the date of death is after the current year being calculated
+
+    sort(a.begin(), a.end(), PersonSort());
+    int max = 0;
+    int maxyear = 1900;
+    vector<Person>::iterator end;
+    int count;
+    for (int i=1900; i < 2001; i++){
+        count = 0;
+        end = partition(a.begin(), a.end(), PersonPartition(i));
+        for (vector<Person>::iterator k = a.begin(); k < end; ++k){
+            if(k->death > i){
+                count++;
+            }
+        }
+        if (count > max){
+            max = count;
+            maxyear = i;
+        }
+    }
+    cout << "The year with the most people alive was " << maxyear << " with " << max << " people alive during that year.\n";
+
+    return 0;
+}
