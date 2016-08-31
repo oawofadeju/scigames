@@ -30,7 +30,7 @@ if ($result->num_rows === 0){
 $player = $result->fetch_assoc();
 $salt = hash('md5', $_POST['hash'] . $player['Name']);
 $sql = "SELECT * FROM Player WHERE PlayerID = $player_id AND salt = $salt";
-$result = $db->query($sql)
+$result = $db->query($sql);
 if ($result->num_rows === 0){
     echo "please try your request again\n";
     die;
@@ -54,6 +54,10 @@ if ($db->affected_rows != 1){
     echo "there was a problem processing your request\n";
     die;
 }
+
+$sql = "SELECT * FROM Player WHERE PlayerID = $player_id";
+$result = $db->query($sql);
+$player = $result->fetch_assoc();
 
 //player updated .. generate jSON
 //JSON  Player ID, Name, Credits, Lifetime Spins, LifeTime Average Return
