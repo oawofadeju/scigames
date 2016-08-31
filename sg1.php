@@ -41,8 +41,13 @@ if (($credits_won || $credits_bet) < 0){
     echo "invalid data received\n";
     die;
 }
-//unique player found with id with no spoof
 $credits_update = $credits_won - $credits_bet;
+$availableCredits = (int) $player['Credits'];
+if ($availableCredits < 0){
+    echo "invalid spin\n";
+    die;
+}
+//unique player found with id with no spoof
 $sql = "UPDATE Player SET lifetime_spins = lifetime_spins + 1, Credits = Credits + $credits_update WHERE PlayerID = $player_id";
 $db->query($sql);
 if ($db->affected_rows != 1){
