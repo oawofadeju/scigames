@@ -1,4 +1,4 @@
-CEATE DATABASE spin_results;
+CREATE DATABASE spin_results;
 CREATE TABLE Player
 (
 PlayerID int(32) NOT NULL PRIMARY KEY,
