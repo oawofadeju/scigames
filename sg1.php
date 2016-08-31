@@ -63,7 +63,7 @@ $player = $result->fetch_assoc();
 //JSON  Player ID, Name, Credits, Lifetime Spins, LifeTime Average Return
 $credits = (int) $player['Credits'];
 $lifetime_spins = (int) $player['lifetime_spins'];
-$lifetime_average = $credits/$lifetime_spins;
+$lifetime_average = (double) $credits/$lifetime_spins;
 $data = array($player_id, htmlentities($player['Name']), $credits, $lifetime_spins, $lifetime_average); 
 
 echo json_encode($data);
