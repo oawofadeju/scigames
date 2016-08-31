@@ -43,7 +43,7 @@ if (($credits_won || $credits_bet) < 0){
 }
 $credits_update = $credits_won - $credits_bet;
 $availableCredits = (int) $player['Credits'];
-if ($availableCredits < 0){
+if (($availableCredits + $credits_update) < 0){
     echo "invalid spin\n";
     die;
 }
